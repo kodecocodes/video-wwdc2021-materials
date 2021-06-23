@@ -34,8 +34,6 @@ import SwiftUI
 
 struct ContentView: View {
 
-  let workerQueue = DispatchQueue(label: "com.raywenderlich.worker", attributes: .concurrent)
-  let nameChangeGroup = DispatchGroup()
   let nameChangingPerson = Person(firstName: "Alison", lastName: "Anderson")
   let nameChangingActorPerson = ActorPerson(firstName: "Alison", lastName: "Anderson")
   let nameList = [("Ben", "Beagle"), ("Charlie", "Cheesecake"), ("Delia", "Dingle"), ("Eva", "Evershed"), ("Freddie", "Frost"), ("Gina", "Gregory")]
@@ -44,20 +42,13 @@ struct ContentView: View {
     Text("Hello, world!")
       .padding()
       .task {
-        for name in nameList {
-          workerQueue.async(group: nameChangeGroup) {
-            nameChangingPerson.changeName(firstName: name.0, lastName: name.1)
-            print("current name: \(nameChangingPerson.firstName) \(nameChangingPerson.lastName)")
-            async {
+        await withTaskGroup(of: Void.self) { group in
+          for name in nameList {
+            group.async {
               await nameChangingActorPerson.changeName(firstName: name.0, lastName: name.1)
-              print("current actor name: \(await nameChangingActorPerson.firstName) \(await nameChangingActorPerson.lastName)")
-            }
-
-          }
-          nameChangeGroup.notify(queue: DispatchQueue.global()) {
-            print("current name: \(nameChangingPerson.firstName) \(nameChangingPerson.lastName)")
-            async {
-              print("fianl actor name: \(await nameChangingActorPerson.firstName) \(await nameChangingActorPerson.lastName)")
+              print("actor name: \(await nameChangingActorPerson.firstName) \(await nameChangingActorPerson.lastName)")
+              nameChangingPerson.changeName(firstName: name.0, lastName: name.1)
+              print("current name: \(nameChangingPerson.firstName) \(nameChangingPerson.lastName)")
             }
           }
         }
@@ -91,6 +82,7 @@ class Person {
     randomDelay(maxDuration: 1.0)
     self.lastName = lastName
   }
+
 }
 
 actor ActorPerson {
@@ -113,4 +105,5 @@ actor ActorPerson {
     randomDelay(maxDuration: 1.0)
     self.lastName = lastName
   }
+
 }
