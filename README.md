@@ -1,6 +1,6 @@
-# WWDC 2021 Courses: Materials
+# WWDC 2021: Understand Swift Actors: Materials
 
-This repo contains all the downloadable materials and projects associated with the **[WWDC 2021 Courses](https://www.raywenderlich.com/library)** from [raywenderlich.com](https://www.raywenderlich.com).
+This repo contains all the downloadable materials and projects associated with the **[WWDC 2021: Understand Swift Actors](https://www.raywenderlich.com/library)** from [raywenderlich.com](https://www.raywenderlich.com).
 
 Each short course has its own branch, named like the course. The default branch for this repo includes all the materials for courses released around WWDC 2021.
 

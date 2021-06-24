@@ -32,14 +32,11 @@
 
 import SwiftUI
 
-struct ContentView: View {
-  var body: some View {
-    Text("Hello, Async/Await!")
-  }
-}
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    ContentView()
+@main
+struct SwiftActorsApp: App {
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
+    }
   }
 }

@@ -32,90 +32,78 @@
 
 import SwiftUI
 
-enum FetchError: Error {
-  case statusCode(Int)
-  case urlResponse
-}
-
-@available(iOS 15.0, *)
-@available(iOS 15.0, *)
 struct ContentView: View {
 
-  @State private var songs = [MusicItem]()
-  @State private var taskHandle: Task.Handle<Void, Never>?
+  let nameChangingPerson = Person(firstName: "Alison", lastName: "Anderson")
+  let nameChangingActorPerson = ActorPerson(firstName: "Alison", lastName: "Anderson")
+  let nameList = [("Ben", "Beagle"), ("Charlie", "Cheesecake"), ("Delia", "Dingle"), ("Eva", "Evershed"), ("Freddie", "Frost"), ("Gina", "Gregory")]
 
   var body: some View {
-    VStack {
-      HStack {
-        Button {
-          taskHandle = async {
-            do {
-              let cohenSongs = try await fetchSongs(for: "cohen")
-              let u2Songs = try await fetchSongs(for: "u2")
-              songs = cohenSongs + u2Songs
-            } catch {
-              print(error.localizedDescription)
-            }
-          }
-        } label: {
-          Text("Fetch songs")
-        }
-        Button {
-          taskHandle?.cancel()
-        } label: {
-          Text("Cancel")
-        }
-      }
-      List(songs) { song in
-        Text("\(song.trackName) - \(song.artistName)")
-      }
+    Text("Hello, world!")
+      .padding()
       .task {
-        do {
-          try await withThrowingTaskGroup(of: [MusicItem].self) { group in
+        await withTaskGroup(of: Void.self) { group in
+          for name in nameList {
             group.async {
-              try await fetchSongs(for: "cohen")
+              await nameChangingActorPerson.changeName(firstName: name.0, lastName: name.1)
+              print("actor name: \(await nameChangingActorPerson.firstName) \(await nameChangingActorPerson.lastName)")
+              nameChangingPerson.changeName(firstName: name.0, lastName: name.1)
+              print("current name: \(nameChangingPerson.firstName) \(nameChangingPerson.lastName)")
             }
-            group.async {
-              try await fetchSongs(for: "u2")
-            }
-            songs = try await group.reduce([], +)
           }
-        } catch {
-          print(error.localizedDescription)
         }
       }
-    }
   }
-
-  func fetchSongs(for artist: String) async throws -> [MusicItem] {
-    print("fetch songs start: \(artist)")
-    guard let url = URL(string: "https://itunes.apple.com/search?media=music&entity=song&term=\(artist)") else {
-      fatalError()
-    }
-    let (data, response) = try await URLSession.shared.data(from: url)
-    print("received data: \(artist)")
-    if !Task.isCancelled {
-      guard let httpResponse = response as? HTTPURLResponse else {
-        throw FetchError.urlResponse
-      }
-      guard (200..<300).contains(httpResponse.statusCode) else {
-        throw FetchError.statusCode(httpResponse.statusCode)
-      }
-      let decoder = JSONDecoder()
-      let mediaResponse = try decoder.decode(MediaResponse.self, from: data)
-
-      return mediaResponse.results
-    } else {
-      print("task cancelled")
-      return [MusicItem]()
-    }
-  }
-
 }
 
-@available(iOS 15.0, *)
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
   }
+}
+
+class Person {
+  var firstName: String
+  var lastName: String
+
+  init(firstName: String, lastName: String) {
+    self.firstName = firstName
+    self.lastName = lastName
+  }
+
+  func randomDelay(maxDuration: Double) {
+    let randomWait = UInt32.random(in: 0...UInt32(maxDuration * Double(USEC_PER_SEC)))
+    usleep(randomWait)
+  }
+
+  func changeName(firstName: String, lastName: String) {
+    randomDelay(maxDuration: 0.2)
+    self.firstName = firstName
+    randomDelay(maxDuration: 1.0)
+    self.lastName = lastName
+  }
+
+}
+
+actor ActorPerson {
+  var firstName: String
+  var lastName: String
+
+  init(firstName: String, lastName: String) {
+    self.firstName = firstName
+    self.lastName = lastName
+  }
+
+  func randomDelay(maxDuration: Double) {
+    let randomWait = UInt32.random(in: 0...UInt32(maxDuration * Double(USEC_PER_SEC)))
+    usleep(randomWait)
+  }
+
+  func changeName(firstName: String, lastName: String) {
+    randomDelay(maxDuration: 0.2)
+    self.firstName = firstName
+    randomDelay(maxDuration: 1.0)
+    self.lastName = lastName
+  }
+
 }
