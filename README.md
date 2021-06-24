@@ -9,3 +9,4 @@ Each short course has its own branch, named like the course. The default branch 
 | Course                                                                                  | Release Date |
 | --------------------------------------------------------------------------------------- |:------------:|
 | [Intro to async/await](https://github.com/raywenderlich/video-wwdc2021-materials/tree/async-await) | 2021-06-22   |
+| [Understand Swift Actors](https://github.com/raywenderlich/video-wwdc2021-materials/tree/swift-actors) | 2021-06-25   |
