@@ -1,6 +1,6 @@
-# Breaking Changes in SwiftUI: Materials
+# WWDC 2021: Breaking Changes in SwiftUI: Materials
 
-This repo contains all the downloadable materials and projects associated with the **[Breaking Changes in SwiftUI](https://www.raywenderlich.com/25424343-wwdc-2021-breaking-changes-in-swiftui)** from [raywenderlich.com](https://www.raywenderlich.com).
+This repo contains all the downloadable materials and projects associated with the **[WWDC 2021: Breaking Changes in SwiftUI](https://www.raywenderlich.com/25424343-wwdc-2021-breaking-changes-in-swiftui)** from [raywenderlich.com](https://www.raywenderlich.com).
 
 Each short course has its own branch, named like the course. The default branch for this repo includes all the materials for courses released around WWDC 2021.
 
